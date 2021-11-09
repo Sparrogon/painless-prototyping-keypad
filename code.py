@@ -2,6 +2,7 @@ import time
 import board
 import digitalio
 import adafruit_matrixkeypad
+import adafruit_dotstar
 import usb_hid
 from adafruit_hid.consumer_control import ConsumerControl
 from adafruit_hid.keyboard import Keyboard
@@ -13,15 +14,30 @@ keys = (
     (3,4,5),
 )
 
-KEYS = [
-    ConsumerControlCode.MUTE,
-    ConsumerControlCode.PLAY_PAUSE,
-    ConsumerControlCode.VOLUME_INCREMENT,
-    [Keycode.CONTROL, Keycode.C],
-    [Keycode.CONTROL, Keycode.V],
-    ConsumerControlCode.VOLUME_DECREMENT,
-]
+def get_key_set(num):
+    if (num == 1):
+        return [
+            Keycode.Z,
+            Keycode.UP_ARROW,
+            Keycode.C,
+            Keycode.LEFT_ARROW,
+            Keycode.DOWN_ARROW,
+            Keycode.RIGHT_ARROW,
+        ]
+    elif (num == 2):
+        return [
+            ConsumerControlCode.MUTE,
+            ConsumerControlCode.PLAY_PAUSE,
+            Keycode.INSERT,
+            [Keycode.DELETE, Keycode.PAGE_UP],
+            ConsumerControlCode.VOLUME_DECREMENT,
+            ConsumerControlCode.VOLUME_INCREMENT,
+        ]
+    else:
+        return []
 
+current_key_set = 1
+KEYS = get_key_set(current_key_set)
 
 time.sleep(1)  # Sleep for a bit to avoid a race condition on some systems
 cc = ConsumerControl(usb_hid.devices)
@@ -29,6 +45,7 @@ kbd = Keyboard(usb_hid.devices)
 cols = [digitalio.DigitalInOut(x) for x in (board.D11, board.D12, board.D13)]
 rows = [digitalio.DigitalInOut(x) for x in (board.D9, board.D10)]
 keypad = adafruit_matrixkeypad.Matrix_Keypad(rows, cols, keys)
+led = adafruit_dotstar.DotStar(board.APA102_SCK, board.APA102_MOSI, 1, brightness=0.1)
 
 # This dict is just for being able to tell if a keycode is a cc code or normal code,
 # to be able to send to the proper device (cc or kbd)
@@ -52,6 +69,21 @@ last_keys = []
 
 while True:
     keys = keypad.pressed_keys
+
+    switch_key_set = list(set(keys) ^ set([3,4,5])) == []
+    if switch_key_set:
+        led[0] = (25, 25, 25)
+        if current_key_set == 1:
+            current_key_set = 2
+        else:
+            current_key_set = 1
+        KEYS = get_key_set(current_key_set)
+        cc.release()
+        kbd.release_all()
+        time.sleep(1)
+        led[0] = (0, 0, 0)
+        continue
+
     added_keys = list(set(keys) - set(last_keys))
     removed_keys = list(set(last_keys) - set(keys))
     for key in added_keys:
