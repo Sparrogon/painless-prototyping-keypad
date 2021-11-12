@@ -17,9 +17,9 @@ keys = (
 def get_key_set(num):
     if (num == 1):
         return [
-            Keycode.Z,
+            Keycode.LEFT_BRACKET,
             Keycode.UP_ARROW,
-            Keycode.C,
+            Keycode.RIGHT_BRACKET,
             Keycode.LEFT_ARROW,
             Keycode.DOWN_ARROW,
             Keycode.RIGHT_ARROW,
@@ -28,8 +28,8 @@ def get_key_set(num):
         return [
             ConsumerControlCode.MUTE,
             ConsumerControlCode.PLAY_PAUSE,
-            Keycode.INSERT,
-            [Keycode.DELETE, Keycode.PAGE_UP],
+            [Keycode.WINDOWS, Keycode.LEFT_BRACKET, Keycode.RIGHT_BRACKET],
+            [Keycode.WINDOWS, Keycode.LEFT_BRACKET, Keycode.RIGHT_BRACKET],
             ConsumerControlCode.VOLUME_DECREMENT,
             ConsumerControlCode.VOLUME_INCREMENT,
         ]
@@ -84,15 +84,7 @@ while True:
         led[0] = (0, 0, 0)
         continue
 
-    added_keys = list(set(keys) - set(last_keys))
     removed_keys = list(set(last_keys) - set(keys))
-    for key in added_keys:
-        keycode = KEYS[key]
-        is_list = isinstance(keycode, list)
-        if not is_list and CONSUMER_CONTROL_CODES.get(keycode):
-            cc.press(keycode)
-        else:
-            kbd.press(*keycode) if is_list else kbd.press(keycode)
     for key in removed_keys:
         keycode = KEYS[key]
         is_list = isinstance(keycode, list)
@@ -100,4 +92,16 @@ while True:
             cc.release()
         else:
             kbd.release(*keycode) if is_list else kbd.release(keycode)
+
+    added_keys = list(set(keys) - set(last_keys))
+    for key in added_keys:
+        keycode = KEYS[key]
+        is_list = isinstance(keycode, list)
+        if not is_list and CONSUMER_CONTROL_CODES.get(keycode):
+            cc.press(keycode)
+        else:
+            kbd.press(*keycode) if is_list else kbd.press(keycode)
+
     last_keys = keys
+
+    time.sleep(0.05)
