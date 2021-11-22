@@ -9,6 +9,8 @@ from adafruit_hid.keyboard import Keyboard
 from adafruit_hid.keycode import Keycode
 from adafruit_hid.consumer_control_code import ConsumerControlCode
 
+cols = [digitalio.DigitalInOut(x) for x in (board.D11, board.D12, board.D13)]
+rows = [digitalio.DigitalInOut(x) for x in (board.D9, board.D10)]
 keys = (
     (0,1,2),
     (3,4,5),
@@ -42,8 +44,6 @@ KEYS = get_key_set(current_key_set)
 time.sleep(1)  # Sleep for a bit to avoid a race condition on some systems
 cc = ConsumerControl(usb_hid.devices)
 kbd = Keyboard(usb_hid.devices)
-cols = [digitalio.DigitalInOut(x) for x in (board.D11, board.D12, board.D13)]
-rows = [digitalio.DigitalInOut(x) for x in (board.D9, board.D10)]
 keypad = adafruit_matrixkeypad.Matrix_Keypad(rows, cols, keys)
 led = adafruit_dotstar.DotStar(board.APA102_SCK, board.APA102_MOSI, 1, brightness=0.1)
 
