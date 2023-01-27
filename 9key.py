@@ -17,18 +17,19 @@ keys = (
     (6, 7, 8),
 )
 
+# https://docs.circuitpython.org/projects/hid/en/latest/api.html#adafruit-hid-keycode-keycode
 def get_key_set(num):
     if (num == 1):
         return [
-            ConsumerControlCode.MUTE,
-            ConsumerControlCode.PLAY_PAUSE,
-            [Keycode.WINDOWS, Keycode.LEFT_BRACKET, Keycode.RIGHT_BRACKET],
-            Keycode.LEFT_BRACKET,
+            Keycode.GRAVE_ACCENT,
             Keycode.UP_ARROW,
-            Keycode.RIGHT_BRACKET,
+            Keycode.BACKSLASH,
             Keycode.LEFT_ARROW,
             Keycode.DOWN_ARROW,
             Keycode.RIGHT_ARROW,
+            Keycode.SPACE,
+            [Keycode.LEFT_CONTROL, Keycode.Q],
+            Keycode.KEYPAD_NUMLOCK,
         ]
     else:
         return []
