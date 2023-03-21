@@ -30,24 +30,27 @@ layout = KeyboardLayoutUS(keyboard)
 
 # A map of keycodes that will be mapped sequentially to each of the keys, 0-15
 keymap =    [Keycode.F10,
-             Keycode.LEFT_ARROW,
              Keycode.GRAVE_ACCENT,
+             [Keycode.LEFT_SHIFT, Keycode.F1],
              Keycode.ONE,
+
+             Keycode.KEYPAD_NUMLOCK,
+             Keycode.LEFT_ARROW,
              Keycode.TAB,
+             Keycode.TWO,
+
+             Keycode.KEYPAD_NUMLOCK,
              Keycode.DOWN_ARROW,
              Keycode.UP_ARROW,
-             Keycode.TWO,
-             Keycode.KEYPAD_NUMLOCK,
-             Keycode.RIGHT_ARROW,
-             [Keycode.LEFT_SHIFT, Keycode.F2],
              Keycode.THREE,
+
              Keycode.SPACE,
-             Keycode.SIX,
-             Keycode.FIVE,
+             Keycode.RIGHT_ARROW,
+             Keycode.TAB,
              Keycode.FOUR]
 
 # The colour to set the keys when pressed.
-rgb = (5, 5, 5)
+rgb = (15, 15, 15)
 
 # Attach handler functions to all of the keys
 for key in keys:
