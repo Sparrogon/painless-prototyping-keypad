@@ -29,28 +29,30 @@ keyboard = Keyboard(usb_hid.devices)
 layout = KeyboardLayoutUS(keyboard)
 
 # A map of keycodes that will be mapped sequentially to each of the keys, 0-15
-keymap =    [Keycode.F10,
-             Keycode.GRAVE_ACCENT,
+keymap =    [Keycode.TAB,
              [Keycode.LEFT_SHIFT, Keycode.F1],
-             Keycode.ONE,
+             [Keycode.LEFT_SHIFT, Keycode.F3],
+             Keycode.LEFT_BRACKET,
 
-             Keycode.KEYPAD_NUMLOCK,
+             Keycode.F10,
              Keycode.LEFT_ARROW,
-             Keycode.TAB,
-             Keycode.TWO,
+             Keycode.Q,
+             Keycode.F7,
 
-             Keycode.KEYPAD_NUMLOCK,
+             Keycode.F2,
              Keycode.DOWN_ARROW,
              Keycode.UP_ARROW,
-             Keycode.THREE,
+             Keycode.KEYPAD_NUMLOCK,
 
-             Keycode.SPACE,
+             Keycode.GRAVE_ACCENT,
              Keycode.RIGHT_ARROW,
-             Keycode.TAB,
-             Keycode.FOUR]
+             Keycode.E,
+             Keycode.DELETE]
 
 # The colour to set the keys when pressed.
-rgb = (15, 15, 15)
+rgb = (5, 5, 5)
+for key in keys:
+        key.set_led(*rgb)
 
 # Attach handler functions to all of the keys
 for key in keys:
@@ -60,7 +62,7 @@ for key in keys:
         keycode = keymap[key.number]
         is_list = isinstance(keycode, list)
         keyboard.send(*keycode) if is_list else keyboard.press(keycode)
-        key.set_led(*rgb)
+        # key.set_led(*rgb)
 
     # A release handler that turns off the LED
     @keybow.on_release(key)
@@ -69,7 +71,7 @@ for key in keys:
         is_list = isinstance(keycode, list)
         if not is_list:
             keyboard.release(keycode)
-        key.led_off()
+        # key.led_off()
 
 while True:
     # Always remember to call keybow.update()!
